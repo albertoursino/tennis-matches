@@ -7,38 +7,39 @@
     tools:context=".NewOpponentForm">
 
     <EditText
-        android:id="@+id/second_name_et"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:hint="Cognome"
-        android:minHeight="48dp"
-        android:text=""
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/first_name_et" />
-
-    <EditText
         android:id="@+id/first_name_et"
         android:layout_width="200dp"
         android:layout_height="45dp"
-        android:layout_marginTop="196dp"
         android:hint="Nome"
         android:minHeight="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/second_name_et"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.3"/>
+
+    <EditText
+        android:id="@+id/second_name_et"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="Cognome"
+        android:minHeight="48dp"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/add_opp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/first_name_et" />
 
     <Button
         android:id="@+id/add_opp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
         android:text="Aggiungi"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/second_name_et" />
+        app:layout_constraintTop_toBottomOf="@+id/second_name_et"
+        android:layout_marginTop="20dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

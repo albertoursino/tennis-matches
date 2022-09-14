@@ -1,5 +1,6 @@
 package com.example.tennismatches;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
@@ -41,6 +42,16 @@ public class OpponentsList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opponents_list);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent myIntent = new Intent(OpponentsList.this, MainActivity.class);
+                OpponentsList.this.startActivity(myIntent);
+                finish();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         tableView = findViewById(R.id.matchTable);
         TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(getApplicationContext(), 3);
@@ -87,7 +98,8 @@ public class OpponentsList extends AppCompatActivity {
         @Override
         public void onNext(List<Opponent> opponents) {
             for (int i = 0; i < opponents.size(); i++) {
-                tableData.add(new String[]{opponents.get(i).getFirstName(),
+                tableData.add(new String[]{
+                        opponents.get(i).getFirstName(),
                         opponents.get(i).getLastName()});
             }
             tableView.setDataAdapter(new SimpleTableDataAdapter(context, tableData));

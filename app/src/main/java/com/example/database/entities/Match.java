@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 
 @Entity(foreignKeys = {@ForeignKey(entity = Opponent.class,
-        parentColumns = "parentClassColumn",
-        childColumns = "childClassColumn",
+        parentColumns = {"oppId"},
+        childColumns = {"matchId"},
         onDelete = ForeignKey.CASCADE)
 })
 public class Match {
@@ -17,18 +17,18 @@ public class Match {
     public int matchId;
 
     @ColumnInfo(name = "date")
-    public Date date;
+    public String date;
 
     @ColumnInfo(name = "result")
-    public Object result; //TODO: change type
+    public String result; //TODO: change type
 
-    public Match(int matchId, Date date, Object result) {
+    public Match(int matchId, String date, String result) {
         this.matchId = matchId;
         this.date = date;
         this.result = result;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
@@ -36,7 +36,7 @@ public class Match {
         return matchId;
     }
 
-    public Object getResult() {
+    public String getResult() {
         return result;
     }
 }

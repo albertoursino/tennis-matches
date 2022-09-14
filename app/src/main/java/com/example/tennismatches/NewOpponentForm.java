@@ -1,6 +1,9 @@
 package com.example.tennismatches;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,7 +52,9 @@ public class NewOpponentForm extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Opponent opponent = new Opponent(firstName.getText().toString(), secondName.getText().toString());
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                int id_opp = sharedPref.getInt("id_opp", 0);
+                Opponent opponent = new Opponent(id_opp, firstName.getText().toString(), secondName.getText().toString());
                 opponentDao.insertAll(opponent)
                         .subscribeOn(Schedulers.from(executorService))
                         .observeOn(AndroidSchedulers.mainThread())
@@ -71,13 +76,17 @@ public class NewOpponentForm extends AppCompatActivity {
             Toast.makeText(NewOpponentForm.this, "Avversario creato!", Toast.LENGTH_SHORT).show();
             Intent myIntent = new Intent(NewOpponentForm.this, OpponentsList.class);
             startActivity(myIntent);
+            // Update counter for the id of the matches (new match id = actual counter value)
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            int counter = sharedPref.getInt("id_opp", 0);
+            editor.putInt("id_opp", ++counter);
+            editor.apply();
         }
 
         @Override
         public void onError(Throwable e) {
             Log.d("Error: ", "" + e);
-            if (e instanceof SQLiteConstraintException)
-                Toast.makeText(NewOpponentForm.this, "L'utente è già presente nel database", Toast.LENGTH_SHORT).show();
         }
     }
 }
