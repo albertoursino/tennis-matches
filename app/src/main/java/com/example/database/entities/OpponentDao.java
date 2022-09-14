@@ -17,12 +17,9 @@ public interface OpponentDao {
     @Query("SELECT * FROM opponent")
     Flowable<List<Opponent>> getAll();
 
-    @Query("SELECT * FROM opponent WHERE oppId IN (:oppIds)")
-    Flowable<List<Opponent>> loadAllByIds(int[] oppIds);
-
-    @Query("SELECT * FROM opponent WHERE first_name LIKE :first AND " +
-            "last_name LIKE :last LIMIT 1")
-    Flowable<Opponent> findByName(String first, String last);
+    @Query("SELECT * FROM opponent WHERE firstName LIKE :first AND " +
+            "lastName LIKE :last")
+    Flowable<List<Opponent>> findByName(String first, String last);
 
     @Insert
     Completable insertAll(Opponent... opponents);

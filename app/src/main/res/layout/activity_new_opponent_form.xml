@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewOpponent">
+    tools:context=".NewOpponentForm">
 
     <EditText
         android:id="@+id/second_name_et"
@@ -22,7 +22,7 @@
     <EditText
         android:id="@+id/first_name_et"
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginTop="196dp"
         android:hint="Nome"
         android:minHeight="48dp"
@@ -37,10 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:text="Aggiungi"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/second_name_et"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/second_name_et" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

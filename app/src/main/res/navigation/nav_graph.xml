@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.example.tennismatches.Homepage"
+        android:name="com.example.tennismatches.HomePage"
         android:label="Benvenuto in TennisMatches!"
         tools:layout="@layout/homepage">
     </fragment>

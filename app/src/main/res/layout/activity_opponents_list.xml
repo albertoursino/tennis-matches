@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OpponentsPage">
+    tools:context=".OpponentsList">
 
     <de.codecrafters.tableview.TableView
-        android:id="@+id/opponentsTable"
-        android:layout_width="match_parent"
+        android:id="@+id/matchTable"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginTop="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:text="Nuovo avversario"
-        app:layout_constraintBottom_toTopOf="@+id/opponentsTable"
+        app:layout_constraintBottom_toTopOf="@+id/matchTable"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         matches_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, MatchesPage.class);
+                Intent myIntent = new Intent(MainActivity.this, MatchesList.class);
                 MainActivity.this.startActivity(myIntent);
             }
         });
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         opps_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, OpponentsPage.class);
+                Intent myIntent = new Intent(MainActivity.this, OpponentsList.class);
                 MainActivity.this.startActivity(myIntent);
             }
         });

@@ -1,15 +1,16 @@
 package com.example.tennismatches;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.content.Intent;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import com.example.database.AppDatabase;
 import com.example.database.entities.Opponent;
@@ -25,14 +26,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class NewOpponent extends AppCompatActivity {
+public class NewOpponentForm extends AppCompatActivity {
 
     private ExecutorService executorService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_opponent);
+        setContentView(R.layout.activity_new_opponent_form);
 
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "tennis-matches-db").build();
@@ -48,7 +49,7 @@ public class NewOpponent extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Opponent opponent = new Opponent(15, firstName.getText().toString(), secondName.getText().toString());
+                Opponent opponent = new Opponent(firstName.getText().toString(), secondName.getText().toString());
                 opponentDao.insertAll(opponent)
                         .subscribeOn(Schedulers.from(executorService))
                         .observeOn(AndroidSchedulers.mainThread())
@@ -63,19 +64,20 @@ public class NewOpponent extends AppCompatActivity {
 
         @Override
         public void onSubscribe(Disposable d) {
-            Log.d("Insert opponent: ", "Trying to register an opponent");
         }
 
         @Override
         public void onComplete() {
-            Toast.makeText(NewOpponent.this, "Avversario creato!", Toast.LENGTH_SHORT).show();
-            Intent myIntent = new Intent(NewOpponent.this, OpponentsPage.class);
-            NewOpponent.this.startActivity(myIntent);
+            Toast.makeText(NewOpponentForm.this, "Avversario creato!", Toast.LENGTH_SHORT).show();
+            Intent myIntent = new Intent(NewOpponentForm.this, OpponentsList.class);
+            startActivity(myIntent);
         }
 
         @Override
         public void onError(Throwable e) {
-            Log.d("Insert opponent: ", "Error -> " + e);
+            Log.d("Error: ", "" + e);
+            if (e instanceof SQLiteConstraintException)
+                Toast.makeText(NewOpponentForm.this, "L'utente è già presente nel database", Toast.LENGTH_SHORT).show();
         }
     }
 }

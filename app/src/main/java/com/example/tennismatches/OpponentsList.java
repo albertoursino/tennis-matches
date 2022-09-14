@@ -24,25 +24,30 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import de.codecrafters.tableview.TableView;
+import de.codecrafters.tableview.model.TableColumnDpWidthModel;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import io.reactivex.FlowableSubscriber;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class OpponentsPage extends AppCompatActivity {
+public class OpponentsList extends AppCompatActivity {
 
     List<String[]> tableData = new ArrayList<>();
-    private final String[] TABLE_HEADERS = {"Nome", "Cognome", "Età", ""};
+    private final String[] TABLE_HEADERS = {"Nome", "Cognome", "# partite"};
     TableView<String[]> tableView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_opponents_page);
+        setContentView(R.layout.activity_opponents_list);
 
-        tableView = findViewById(R.id.opponentsTable);
-        tableView.setColumnCount(4);
+        tableView = findViewById(R.id.matchTable);
+        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(getApplicationContext(), 3);
+        columnModel.setColumnWidth(0, 150);
+        columnModel.setColumnWidth(1, 150);
+        columnModel.setColumnWidth(2, 150);
+        tableView.setColumnModel(columnModel);
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TABLE_HEADERS));
 
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
@@ -60,15 +65,14 @@ public class OpponentsPage extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(OpponentsPage.this, NewOpponent.class);
-                OpponentsPage.this.startActivity(myIntent);
+                Intent myIntent = new Intent(OpponentsList.this, NewOpponentForm.class);
+                OpponentsList.this.startActivity(myIntent);
             }
         });
     }
 
     private class DbGetCompleteObserver implements FlowableSubscriber<List<Opponent>> {
 
-        String LOG_TAG = "Get users: ";
         Context context;
 
         DbGetCompleteObserver(Context context) {
@@ -77,7 +81,6 @@ public class OpponentsPage extends AppCompatActivity {
 
         @Override
         public void onSubscribe(Subscription s) {
-            Log.d(LOG_TAG, "onSubscribe");
             s.request(Long.MAX_VALUE);
         }
 
@@ -92,12 +95,11 @@ public class OpponentsPage extends AppCompatActivity {
 
         @Override
         public void onError(Throwable t) {
-            Log.d(LOG_TAG, "error -> " + t);
+            Log.d("Error: ", "" + t);
         }
 
         @Override
         public void onComplete() {
-            Log.d(LOG_TAG, "done");
         }
     }
 }

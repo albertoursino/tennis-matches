@@ -7,11 +7,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.tennismatches.databinding.HomepageBinding;
 
-public class Homepage extends Fragment {
+public class HomePage extends Fragment {
 
     private HomepageBinding binding;
 

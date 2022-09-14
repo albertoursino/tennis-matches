@@ -14,22 +14,6 @@
         android:theme="@style/Theme.TennisMatches"
         tools:targetApi="31">
         <activity
-            android:name=".NewOpponent"
-            android:exported="false"
-            android:label="Nuovo avversario"/>
-        <activity
-            android:name=".PersonalPage"
-            android:exported="false"
-            android:label="Pagina personale" />
-        <activity
-            android:name=".OpponentsPage"
-            android:exported="false"
-            android:label="Lista avversari" />
-        <activity
-            android:name=".MatchesPage"
-            android:exported="false"
-            android:label="Lista partite" />
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.TennisMatches.NoActionBar">
@@ -39,6 +23,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".OpponentsList"
+            android:exported="false"
+            android:label="Lista avversari" />
+        <activity
+            android:name=".MatchesList"
+            android:exported="false"
+            android:label="Lista partite" />
+        <activity
+            android:name=".PersonalPage"
+            android:exported="false"
+            android:label="Pagina personale" />
+        <activity
+            android:name=".OpponentPersonalPage"
+            android:exported="false"
+            android:label="Il tuo avversario"/>
+        <activity
+            android:name=".NewMatchForm"
+            android:exported="false"
+            android:label="Nuova partita"
+            android:noHistory="true" />
+        <activity
+            android:name=".NewOpponentForm"
+            android:exported="false"
+            android:label="Nuovo avversario"
+            android:noHistory="true" />
+
+
     </application>
 
 </manifest>
