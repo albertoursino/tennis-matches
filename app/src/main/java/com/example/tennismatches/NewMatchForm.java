@@ -1,39 +1,42 @@
 package com.example.tennismatches;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteConstraintException;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
+
 import com.example.database.AppDatabase;
-import com.example.database.entities.Match;
 import com.example.database.entities.Opponent;
 import com.example.database.entities.OpponentDao;
 
 import org.reactivestreams.Subscription;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import io.reactivex.CompletableObserver;
 import io.reactivex.FlowableSubscriber;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -41,6 +44,10 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class NewMatchForm extends AppCompatActivity {
+
+    DatePickerDialog datePickerDialog;
+    Button datePickerButton;
+    Date matchDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,23 +62,62 @@ public class NewMatchForm extends AppCompatActivity {
 
         Button button = findViewById(R.id.add_match);
 
-        EditText date = findViewById(R.id.match_date);
+        initDatePicker();
+        datePickerButton = findViewById(R.id.match_date);
+        datePickerButton.setText(getTodayDate());
+        datePickerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                datePickerDialog.show();
+            }
+        });
 
         opponentDao.getAll()
                 .subscribeOn(Schedulers.from(executorService))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DbGetCompleteObserver(getApplicationContext()));
 
-        //TODO: EditText to Date format
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                 //TODO: creation of a new match
-                //Match match = new Match(sharedPref.getInt("id_match", -1), date, opponent);
             }
         });
+    }
+
+    private String getTodayDate() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        month += 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        return day + "-" + month + "-" + year;
+    }
+
+    public void initDatePicker() {
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month += 1;
+                String dateStr = day + "-" + month + "-" + year;
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+                try {
+                    datePickerButton.setText(dateStr);
+                    matchDate = formatter.parse(dateStr);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int style = AlertDialog.THEME_HOLO_LIGHT;
+
+        datePickerDialog = new DatePickerDialog(this, style, dateSetListener, year, month, day);
     }
 
     private class DbInsertCompleteObserver implements CompletableObserver {
@@ -140,5 +186,16 @@ public class NewMatchForm extends AppCompatActivity {
         @Override
         public void onComplete() {
         }
+    }
+
+    public static Date getDateFromDatePicker(DatePicker datePicker) {
+        int day = datePicker.getDayOfMonth();
+        int month = datePicker.getMonth();
+        int year = datePicker.getYear();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+
+        return calendar.getTime();
     }
 }

@@ -17,18 +17,18 @@ public class Match {
     public int matchId;
 
     @ColumnInfo(name = "date")
-    public String date;
+    public Date date;
 
     @ColumnInfo(name = "result")
     public String result; //TODO: change type
 
-    public Match(int matchId, String date, String result) {
+    public Match(int matchId, Date date, String result) {
         this.matchId = matchId;
         this.date = date;
         this.result = result;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
