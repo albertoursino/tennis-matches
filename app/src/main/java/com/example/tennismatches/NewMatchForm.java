@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -61,6 +64,49 @@ public class NewMatchForm extends AppCompatActivity {
         ExecutorService executorService = new ThreadPoolExecutor(4, 5, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
 
         Button button = findViewById(R.id.add_match);
+        EditText result = findViewById(R.id.result);
+
+        Button buttonErase = findViewById(R.id.erase_result_btn);
+        buttonErase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                result.setText("");
+            }
+        });
+
+        opponentDao.getAll()
+                .subscribeOn(Schedulers.from(executorService))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DbGetCompleteObserver(getApplicationContext()));
+
+        result.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = result.getText().toString();
+                if (str.length() >= 1) {
+                    boolean matches = str.substring(str.length() - 1).matches("\\d");
+                    if (str.length() >= 3) {
+                        if (str.substring(str.length() - 3).matches("\\d-\\d")) {
+                            result.append(" ");
+                        }
+                        else if (matches) {
+                            result.append("-");
+                        }
+                    }
+                    else if (matches) {
+                        result.append("-");
+                    }
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
 
         initDatePicker();
         datePickerButton = findViewById(R.id.match_date);
@@ -71,11 +117,6 @@ public class NewMatchForm extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
-
-        opponentDao.getAll()
-                .subscribeOn(Schedulers.from(executorService))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DbGetCompleteObserver(getApplicationContext()));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

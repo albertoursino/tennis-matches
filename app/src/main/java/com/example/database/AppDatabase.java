@@ -16,9 +16,6 @@ import com.example.database.entities.Utils;
 
 @Database(entities = {Match.class, Opponent.class},
         version = 1
-//        autoMigrations = {
-//                @AutoMigration(from = 1, to = 2)
-//        }
         )
 @TypeConverters({Utils.Converters.class})
 public abstract class AppDatabase extends RoomDatabase {

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "cd8f51a73d7141c211b3ccef15fd1f1e",
+    "identityHash": "08e8442e0abe20fba1d45eed0a151450",
     "entities": [
       {
         "tableName": "Match",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`matchId` INTEGER NOT NULL, `date` TEXT, `result` TEXT, PRIMARY KEY(`matchId`), FOREIGN KEY(`matchId`) REFERENCES `Opponent`(`oppId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`matchId` INTEGER NOT NULL, `date` INTEGER, `result` TEXT, PRIMARY KEY(`matchId`), FOREIGN KEY(`matchId`) REFERENCES `Opponent`(`oppId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "matchId",
@@ -17,7 +17,7 @@
           {
             "fieldPath": "date",
             "columnName": "date",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
@@ -84,7 +84,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cd8f51a73d7141c211b3ccef15fd1f1e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '08e8442e0abe20fba1d45eed0a151450')"
     ]
   }
 }

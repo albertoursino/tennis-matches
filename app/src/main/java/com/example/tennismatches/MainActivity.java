@@ -12,7 +12,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.room.Room;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.example.database.AppDatabase;
 import com.example.tennismatches.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
