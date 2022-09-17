@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Entity(foreignKeys = {@ForeignKey(entity = Opponent.class,
         parentColumns = {"oppId"},
-        childColumns = {"matchId"},
+        childColumns = {"oppId"},
         onDelete = ForeignKey.CASCADE)
 })
 public class Match {
@@ -20,23 +20,31 @@ public class Match {
     public Date date;
 
     @ColumnInfo(name = "result")
-    public String result; //TODO: change type
+    public String result;
 
-    public Match(int matchId, Date date, String result) {
+    @ColumnInfo(name = "oppId")
+    public int oppId;
+
+    public Match(int matchId, Date date, String result, int oppId) {
         this.matchId = matchId;
         this.date = date;
         this.result = result;
-    }
-
-    public Date getDate() {
-        return date;
+        this.oppId = oppId;
     }
 
     public int getMatchId() {
         return matchId;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
     public String getResult() {
         return result;
+    }
+
+    public int getOpponentId() {
+        return oppId;
     }
 }

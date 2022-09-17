@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.database.AppDatabase;
+import com.example.database.entities.Match;
+import com.example.database.entities.MatchDao;
 import com.example.database.entities.Opponent;
 import com.example.database.entities.OpponentDao;
 
@@ -35,7 +37,7 @@ import io.reactivex.schedulers.Schedulers;
 public class OpponentsList extends AppCompatActivity {
 
     List<String[]> tableData = new ArrayList<>();
-    private final String[] TABLE_HEADERS = {"Nome", "Cognome", "# partite"};
+    private final String[] TABLE_HEADERS = {"Nome", "Cognome"};
     TableView<String[]> tableView;
 
     @Override
@@ -53,11 +55,10 @@ public class OpponentsList extends AppCompatActivity {
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
 
-        tableView = findViewById(R.id.matchTable);
-        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(getApplicationContext(), 3);
-        columnModel.setColumnWidth(0, 150);
-        columnModel.setColumnWidth(1, 150);
-        columnModel.setColumnWidth(2, 150);
+        tableView = findViewById(R.id.opponents_table);
+        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(getApplicationContext(), 2);
+        columnModel.setColumnWidth(0, 200);
+        columnModel.setColumnWidth(1, 200);
         tableView.setColumnModel(columnModel);
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TABLE_HEADERS));
 
@@ -70,7 +71,7 @@ public class OpponentsList extends AppCompatActivity {
         opponentDao.getAll()
                 .subscribeOn(Schedulers.from(executorService))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DbGetCompleteObserver(getApplicationContext()));
+                .subscribe(new DbGetOppCompleteObserver(getApplicationContext()));
 
         Button button = findViewById(R.id.new_opp_btn);
         button.setOnClickListener(new View.OnClickListener() {
@@ -82,11 +83,11 @@ public class OpponentsList extends AppCompatActivity {
         });
     }
 
-    private class DbGetCompleteObserver implements FlowableSubscriber<List<Opponent>> {
+    private class DbGetOppCompleteObserver implements FlowableSubscriber<List<Opponent>> {
 
         Context context;
 
-        DbGetCompleteObserver(Context context) {
+        DbGetOppCompleteObserver(Context context) {
             this.context = context;
         }
 

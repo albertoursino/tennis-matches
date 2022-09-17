@@ -23,6 +23,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import com.example.database.AppDatabase;
+import com.example.database.entities.Match;
+import com.example.database.entities.MatchDao;
 import com.example.database.entities.Opponent;
 import com.example.database.entities.OpponentDao;
 
@@ -60,10 +62,15 @@ public class NewMatchForm extends AppCompatActivity {
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "tennis-matches-db").build();
         OpponentDao opponentDao = db.opponentDao();
+        MatchDao matchDao = db.matchDao();
 
         ExecutorService executorService = new ThreadPoolExecutor(4, 5, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
 
-        Button button = findViewById(R.id.add_match);
+        opponentDao.getAll()
+                .subscribeOn(Schedulers.from(executorService))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DbGetCompleteObserver(getApplicationContext()));
+
         EditText result = findViewById(R.id.result);
 
         Button buttonErase = findViewById(R.id.erase_result_btn);
@@ -74,11 +81,6 @@ public class NewMatchForm extends AppCompatActivity {
             }
         });
 
-        opponentDao.getAll()
-                .subscribeOn(Schedulers.from(executorService))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DbGetCompleteObserver(getApplicationContext()));
-
         result.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -88,12 +90,10 @@ public class NewMatchForm extends AppCompatActivity {
                     if (str.length() >= 3) {
                         if (str.substring(str.length() - 3).matches("\\d-\\d")) {
                             result.append(" ");
-                        }
-                        else if (matches) {
+                        } else if (matches) {
                             result.append("-");
                         }
-                    }
-                    else if (matches) {
+                    } else if (matches) {
                         result.append("-");
                     }
                 }
@@ -118,11 +118,27 @@ public class NewMatchForm extends AppCompatActivity {
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
+        Spinner spinner = (Spinner) findViewById(R.id.opponents_list_spinner);
+
+        Button addMatchBtn = findViewById(R.id.add_match_btn);
+        addMatchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-                //TODO: creation of a new match
+                int idMatch = sharedPref.getInt("id_match", 0);
+                int idOpp = Integer.parseInt(spinner.getSelectedItem().toString().substring(1, 2));
+                String res = result.getText().toString();
+                try {
+                    String s = datePickerButton.getText().toString();
+                    matchDate = new SimpleDateFormat("dd-MM-yyyy", Locale.ITALY).parse(s);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Match match = new Match(idMatch, matchDate, res, idOpp);
+                matchDao.insertAll(match)
+                        .subscribeOn(Schedulers.from(executorService))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new DbInsertCompleteObserver());
             }
         });
     }
@@ -143,13 +159,7 @@ public class NewMatchForm extends AppCompatActivity {
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month += 1;
                 String dateStr = day + "-" + month + "-" + year;
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
-                try {
-                    datePickerButton.setText(dateStr);
-                    matchDate = formatter.parse(dateStr);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                datePickerButton.setText(dateStr);
             }
         };
         Calendar calendar = Calendar.getInstance();
@@ -178,11 +188,9 @@ public class NewMatchForm extends AppCompatActivity {
             // Update counter for the id of the matches (new match id = actual counter value)
             SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
-            int counter = sharedPref.getInt("id_match", -1);
-            if (counter != -1) {
-                editor.putInt("id_match", ++counter);
-                editor.apply();
-            }
+            int counter = sharedPref.getInt("id_match", 0);
+            editor.putInt("id_match", ++counter);
+            editor.apply();
         }
 
         @Override
@@ -215,7 +223,7 @@ public class NewMatchForm extends AppCompatActivity {
                     context, android.R.layout.simple_spinner_item, oppsName);
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            Spinner sItems = (Spinner) findViewById(R.id.match_opponents_list);
+            Spinner sItems = (Spinner) findViewById(R.id.opponents_list_spinner);
             sItems.setAdapter(adapter);
         }
 
@@ -227,16 +235,5 @@ public class NewMatchForm extends AppCompatActivity {
         @Override
         public void onComplete() {
         }
-    }
-
-    public static Date getDateFromDatePicker(DatePicker datePicker) {
-        int day = datePicker.getDayOfMonth();
-        int month = datePicker.getMonth();
-        int year = datePicker.getYear();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, day);
-
-        return calendar.getTime();
     }
 }

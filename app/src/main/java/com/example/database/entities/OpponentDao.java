@@ -21,6 +21,9 @@ public interface OpponentDao {
             "lastName LIKE :last")
     Flowable<List<Opponent>> findByName(String first, String last);
 
+    @Query("SELECT * FROM opponent WHERE oppId LIKE :oppId")
+    Flowable<Opponent> findById(int oppId);
+
     @Insert
     Completable insertAll(Opponent... opponents);
 

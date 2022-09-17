@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "08e8442e0abe20fba1d45eed0a151450",
+    "identityHash": "b0a18c08f4de6d08a0cc614de3482c3a",
     "entities": [
       {
         "tableName": "Match",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`matchId` INTEGER NOT NULL, `date` INTEGER, `result` TEXT, PRIMARY KEY(`matchId`), FOREIGN KEY(`matchId`) REFERENCES `Opponent`(`oppId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`matchId` INTEGER NOT NULL, `date` INTEGER, `result` TEXT, `oppId` INTEGER NOT NULL, PRIMARY KEY(`matchId`), FOREIGN KEY(`oppId`) REFERENCES `Opponent`(`oppId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "matchId",
@@ -25,6 +25,12 @@
             "columnName": "result",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "oppId",
+            "columnName": "oppId",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -40,7 +46,7 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "matchId"
+              "oppId"
             ],
             "referencedColumns": [
               "oppId"
@@ -84,7 +90,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '08e8442e0abe20fba1d45eed0a151450')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b0a18c08f4de6d08a0cc614de3482c3a')"
     ]
   }
 }

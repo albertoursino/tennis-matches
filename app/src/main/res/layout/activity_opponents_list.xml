@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <de.codecrafters.tableview.TableView
-            android:id="@+id/matchTable"
+            android:id="@+id/opponents_table"
             android:layout_width="wrap_content"
             android:layout_height="500dp"
             android:layout_marginTop="20dp"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Nuovo avversario"
-            app:layout_constraintBottom_toTopOf="@+id/matchTable"
+            app:layout_constraintBottom_toTopOf="@+id/opponents_table"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
