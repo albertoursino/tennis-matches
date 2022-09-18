@@ -3,12 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homepage">
-
+    app:startDestination="@id/homeFragment">
     <fragment
-        android:id="@+id/homepage"
-        android:name="com.example.tennismatches.HomePage"
-        android:label="Benvenuto in TennisMatches!"
-        tools:layout="@layout/homepage">
+        android:id="@+id/homeFragment"
+        android:name="com.example.tennismatches.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_opponentsListFragment"
+            app:destination="@id/opponentsListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_matchesListFragment"
+            app:destination="@id/matchesListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/opponentsListFragment"
+        android:name="com.example.tennismatches.OpponentsListFragment"
+        android:label="fragment_opponents_list"
+        tools:layout="@layout/fragment_opponents_list" >
+        <action
+            android:id="@+id/action_opponentsListFragment_to_matchesListFragment"
+            app:destination="@id/matchesListFragment" />
+        <action
+            android:id="@+id/action_opponentsListFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/matchesListFragment"
+        android:name="com.example.tennismatches.MatchesListFragment"
+        android:label="fragment_matches_list"
+        tools:layout="@layout/fragment_matches_list" >
+        <action
+            android:id="@+id/action_matchesListFragment_to_opponentsListFragment"
+            app:destination="@id/opponentsListFragment" />
+        <action
+            android:id="@+id/action_matchesListFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

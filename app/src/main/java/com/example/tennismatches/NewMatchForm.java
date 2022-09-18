@@ -183,7 +183,7 @@ public class NewMatchForm extends AppCompatActivity {
         @Override
         public void onComplete() {
             Toast.makeText(NewMatchForm.this, "Partita creata!", Toast.LENGTH_SHORT).show();
-            Intent myIntent = new Intent(NewMatchForm.this, MatchesList.class);
+            Intent myIntent = new Intent(NewMatchForm.this, MainActivity.class);
             startActivity(myIntent);
             // Update counter for the id of the matches (new match id = actual counter value)
             SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);

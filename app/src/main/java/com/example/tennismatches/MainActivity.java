@@ -1,65 +1,56 @@
 package com.example.tennismatches;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-import androidx.room.Room;
-import androidx.room.migration.Migration;
-import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.database.AppDatabase;
-import com.example.tennismatches.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
+    NavController navController;
+    private long backPressed;
+    private static final int TIME_INTERVAL_BACK_BTN = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        if (navHostFragment != null)
+            navController = navHostFragment.getNavController();
 
-        setSupportActionBar(binding.toolbar);
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        final Button matches_btn = findViewById(R.id.matches_btn);
-        matches_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, MatchesList.class);
-                MainActivity.this.startActivity(myIntent);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.home_page:
+                    if (navController.getCurrentDestination().getId() == R.id.matchesListFragment)
+                        navController.navigate(R.id.action_matchesListFragment_to_homeFragment);
+                    else if (navController.getCurrentDestination().getId() == R.id.opponentsListFragment)
+                        navController.navigate(R.id.action_opponentsListFragment_to_homeFragment);
+                    break;
+                case R.id.matches_page:
+                    if (navController.getCurrentDestination().getId() == R.id.opponentsListFragment)
+                        navController.navigate(R.id.action_opponentsListFragment_to_matchesListFragment);
+                    else if (navController.getCurrentDestination().getId() == R.id.homeFragment)
+                        navController.navigate(R.id.action_homeFragment_to_matchesListFragment);
+                    break;
+                case R.id.opponents_page:
+                    if (navController.getCurrentDestination().getId() == R.id.homeFragment)
+                        navController.navigate(R.id.action_homeFragment_to_opponentsListFragment);
+                    else if (navController.getCurrentDestination().getId() == R.id.matchesListFragment)
+                        navController.navigate(R.id.action_matchesListFragment_to_opponentsListFragment);
+                    break;
             }
-        });
-        final Button opps_btn = findViewById(R.id.opps_btn);
-        opps_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, OpponentsList.class);
-                MainActivity.this.startActivity(myIntent);
-            }
-        });
-        final Button pp_btn = findViewById(R.id.pp_btn);
-        pp_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, PersonalPage.class);
-                MainActivity.this.startActivity(myIntent);
-            }
+            return true;
         });
     }
 
@@ -86,9 +77,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
+    public void onBackPressed() {
+        Toast toast = Toast.makeText(this, "Vai indietro di nuovo per uscire", Toast.LENGTH_SHORT);
+        if (backPressed + TIME_INTERVAL_BACK_BTN > System.currentTimeMillis()) {
+            finish();
+        } else
+            toast.show();
+        backPressed = System.currentTimeMillis();
     }
 }

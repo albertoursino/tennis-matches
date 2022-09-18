@@ -75,7 +75,7 @@ public class NewOpponentForm extends AppCompatActivity {
         @Override
         public void onComplete() {
             Toast.makeText(NewOpponentForm.this, "Avversario creato!", Toast.LENGTH_SHORT).show();
-            Intent myIntent = new Intent(NewOpponentForm.this, OpponentsList.class);
+            Intent myIntent = new Intent(NewOpponentForm.this, MainActivity.class);
             startActivity(myIntent);
             // Update counter for the id of the matches (new match id = actual counter value)
             SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);

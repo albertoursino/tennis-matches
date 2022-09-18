@@ -24,21 +24,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".OpponentsList"
-            android:exported="false"
-            android:label="Lista avversari" />
-        <activity
             android:name=".MatchesList"
             android:exported="false"
             android:label="Lista partite" />
-        <activity
-            android:name=".PersonalPage"
-            android:exported="false"
-            android:label="Pagina personale" />
-        <activity
-            android:name=".OpponentPersonalPage"
-            android:exported="false"
-            android:label="Il tuo avversario"/>
         <activity
             android:name=".NewMatchForm"
             android:exported="false"
@@ -49,8 +37,6 @@
             android:exported="false"
             android:label="Nuovo avversario"
             android:noHistory="true" />
-
-
     </application>
 
 </manifest>
