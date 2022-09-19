@@ -1,18 +1,19 @@
 package com.example.tennismatches;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
@@ -45,12 +46,12 @@ public class NewOpponentForm extends AppCompatActivity {
 
         executorService = new ThreadPoolExecutor(4, 5, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
 
-        Button button = findViewById(R.id.add_opp);
+        Button addOppBtn = findViewById(R.id.add_opp);
 
         EditText firstName = findViewById(R.id.first_name_et);
         EditText secondName = findViewById(R.id.second_name_et);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        addOppBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
@@ -60,6 +61,14 @@ public class NewOpponentForm extends AppCompatActivity {
                         .subscribeOn(Schedulers.from(executorService))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new DbInsertCompleteObserver());
+            }
+        });
+
+        ImageView backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }

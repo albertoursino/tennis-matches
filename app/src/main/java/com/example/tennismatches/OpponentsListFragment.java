@@ -1,10 +1,10 @@
 package com.example.tennismatches;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
@@ -52,8 +52,8 @@ public class OpponentsListFragment extends Fragment {
     private String mParam2;
 
     TableView tableView;
-    private final String[] TABLE_HEADERS = {"Nome", "Cognome"};
     List<String[]> tableData = new ArrayList<>();
+    private static final String[] TABLE_HEADERS = {"I tuoi avversari"};
 
     public OpponentsListFragment() {
         // Required empty public constructor
@@ -92,9 +92,7 @@ public class OpponentsListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_opponents_list, container, false);
         tableView = view.findViewById(R.id.opponents_table);
-        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(view.getContext(), 2);
-        columnModel.setColumnWidth(0, 200);
-        columnModel.setColumnWidth(1, 200);
+        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(view.getContext(), 1, 500);
         tableView.setColumnModel(columnModel);
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(view.getContext(), TABLE_HEADERS));
 
@@ -117,6 +115,7 @@ public class OpponentsListFragment extends Fragment {
                 startActivity(myIntent);
             }
         });
+
         // Inflate the layout for this fragment
         return view;
     }
@@ -138,8 +137,8 @@ public class OpponentsListFragment extends Fragment {
         public void onNext(List<Opponent> opponents) {
             for (int i = 0; i < opponents.size(); i++) {
                 tableData.add(new String[]{
-                        opponents.get(i).getFirstName(),
-                        opponents.get(i).getLastName()});
+                        opponents.get(i).getFirstName() + " " +
+                                opponents.get(i).getLastName()});
             }
             tableView.setDataAdapter(new SimpleTableDataAdapter(context, tableData));
         }

@@ -10,14 +10,18 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
@@ -53,6 +57,8 @@ public class NewMatchForm extends AppCompatActivity {
     DatePickerDialog datePickerDialog;
     Button datePickerButton;
     Date matchDate;
+    List<Opponent> opponentsAvailable;
+    Opponent selectedOpp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +133,12 @@ public class NewMatchForm extends AppCompatActivity {
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                 int idMatch = sharedPref.getInt("id_match", 0);
                 int idOpp = Integer.parseInt(spinner.getSelectedItem().toString().substring(1, 2));
+                for (int i = 0; i < opponentsAvailable.size(); i++) {
+                    if (idOpp == opponentsAvailable.get(i).getOppId()) {
+                        selectedOpp = opponentsAvailable.get(i);
+                        break;
+                    }
+                }
                 String res = result.getText().toString();
                 try {
                     String s = datePickerButton.getText().toString();
@@ -134,11 +146,19 @@ public class NewMatchForm extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Match match = new Match(idMatch, matchDate, res, idOpp);
+                Match match = new Match(idMatch, matchDate, res);
                 matchDao.insertAll(match)
                         .subscribeOn(Schedulers.from(executorService))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new DbInsertCompleteObserver());
+            }
+        });
+
+        ImageView backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
@@ -195,7 +215,7 @@ public class NewMatchForm extends AppCompatActivity {
 
         @Override
         public void onError(Throwable e) {
-            Log.d("Error: ", "" + e);
+            Log.d("Error insert match: ", "" + e);
         }
     }
 
@@ -214,6 +234,7 @@ public class NewMatchForm extends AppCompatActivity {
 
         @Override
         public void onNext(List<Opponent> opponents) {
+            opponentsAvailable = opponents;
             List<String> oppsName = new ArrayList<>();
             for (int i = 0; i < opponents.size(); i++) {
                 oppsName.add("(" + opponents.get(i).getOppId() + ") " + opponents.get(i).getFirstName() + " " + opponents.get(i).getLastName());
@@ -229,7 +250,7 @@ public class NewMatchForm extends AppCompatActivity {
 
         @Override
         public void onError(Throwable t) {
-            Log.d("Error: ", "" + t);
+            Log.d("Error get opponent: ", "" + t);
         }
 
         @Override

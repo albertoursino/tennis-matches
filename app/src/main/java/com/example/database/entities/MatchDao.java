@@ -21,8 +21,8 @@ public interface MatchDao {
     @Query("SELECT * FROM `match` WHERE matchId LIKE :id")
     Flowable<Match> findById(int id);
 
-    @Query("SELECT * FROM `match` WHERE oppId LIKE :oppId")
-    Flowable<List<Match>> findMatchesByOppId(int oppId);
+//    @Query("SELECT * FROM `match` WHERE opponent LIKE :opponent")
+//    Flowable<List<Match>> findMatchesByOpp(Opponent opponent);
 
     @Insert
     Completable insertAll(Match... matches);

@@ -1,6 +1,5 @@
 package com.example.database.entities;
 
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
@@ -15,21 +14,14 @@ import java.util.Date;
 public class Match {
     @PrimaryKey
     public int matchId;
-
-    @ColumnInfo(name = "date")
     public Date date;
-
-    @ColumnInfo(name = "result")
     public String result;
-
-    @ColumnInfo(name = "oppId")
     public int oppId;
 
-    public Match(int matchId, Date date, String result, int oppId) {
+    public Match(int matchId, Date date, String result) {
         this.matchId = matchId;
         this.date = date;
         this.result = result;
-        this.oppId = oppId;
     }
 
     public int getMatchId() {

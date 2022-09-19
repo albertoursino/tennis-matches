@@ -16,6 +16,8 @@ import android.widget.Button;
 import com.example.database.AppDatabase;
 import com.example.database.entities.Match;
 import com.example.database.entities.MatchDao;
+import com.example.database.entities.Opponent;
+import com.example.database.entities.OpponentDao;
 
 import org.reactivestreams.Subscription;
 
@@ -53,8 +55,10 @@ public class MatchesListFragment extends Fragment {
     private String mParam2;
 
     List<String[]> tableData = new ArrayList<>();
-    private final String[] TABLE_HEADERS = {"ID avversario", "Risultato", "Data"};
+    private final String[] TABLE_HEADERS = {"Le tue partite"};
     TableView<String[]> tableView;
+    ExecutorService executorService;
+    AppDatabase db;
 
     public MatchesListFragment() {
         // Required empty public constructor
@@ -103,18 +107,15 @@ public class MatchesListFragment extends Fragment {
         });
 
         tableView = view.findViewById(R.id.matches_table);
-        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(view.getContext(), 3);
-        columnModel.setColumnWidth(0, 100);
-        columnModel.setColumnWidth(1, 150);
-        columnModel.setColumnWidth(2, 150);
+        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(view.getContext(), 1, 1000);
         tableView.setColumnModel(columnModel);
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(view.getContext(), TABLE_HEADERS));
 
-        AppDatabase db = Room.databaseBuilder(view.getContext(),
+        db = Room.databaseBuilder(view.getContext(),
                 AppDatabase.class, "tennis-matches-db").build();
         MatchDao matchDao = db.matchDao();
 
-        ExecutorService executorService = new ThreadPoolExecutor(4, 5, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
+        executorService = new ThreadPoolExecutor(4, 5, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
 
         matchDao.getAll()
                 .subscribeOn(Schedulers.from(executorService))
@@ -142,12 +143,12 @@ public class MatchesListFragment extends Fragment {
         public void onNext(List<Match> matches) {
             Calendar c = Calendar.getInstance();
             for (int i = 0; i < matches.size(); i++) {
-                Date date = matches.get(i).getDate();
+                Match actualMatch = matches.get(i);
+                Date date = actualMatch.getDate();
                 c.setTime(date);
                 tableData.add(new String[]{
-                        matches.get(i).getOpponentId() + "",
-                        matches.get(i).getResult(),
-                        c.get(Calendar.DAY_OF_MONTH) + "/" + (c.get(Calendar.MONTH)+1) + "/" + c.get(Calendar.YEAR)
+                        " vs " + " " + " il " +
+                                c.get(Calendar.DAY_OF_MONTH) + "/" + (c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR)
                 });
             }
             tableView.setDataAdapter(new SimpleTableDataAdapter(context, tableData));
