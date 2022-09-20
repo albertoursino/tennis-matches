@@ -5,15 +5,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
@@ -60,7 +57,7 @@ public class NewOpponentForm extends AppCompatActivity {
                 opponentDao.insertAll(opponent)
                         .subscribeOn(Schedulers.from(executorService))
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new DbInsertCompleteObserver());
+                        .subscribe(new insertOpponentObserver());
             }
         });
 
@@ -73,10 +70,7 @@ public class NewOpponentForm extends AppCompatActivity {
         });
     }
 
-    private class DbInsertCompleteObserver implements CompletableObserver {
-        DbInsertCompleteObserver() {
-        }
-
+    private class insertOpponentObserver implements CompletableObserver {
         @Override
         public void onSubscribe(Disposable d) {
         }
@@ -85,6 +79,7 @@ public class NewOpponentForm extends AppCompatActivity {
         public void onComplete() {
             Toast.makeText(NewOpponentForm.this, "Avversario creato!", Toast.LENGTH_SHORT).show();
             Intent myIntent = new Intent(NewOpponentForm.this, MainActivity.class);
+            myIntent.putExtra("lastFragment", "opponentsList");
             startActivity(myIntent);
             // Update counter for the id of the matches (new match id = actual counter value)
             SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
@@ -92,11 +87,12 @@ public class NewOpponentForm extends AppCompatActivity {
             int counter = sharedPref.getInt("id_opp", 0);
             editor.putInt("id_opp", ++counter);
             editor.apply();
+            finish();
         }
 
         @Override
         public void onError(Throwable e) {
-            Log.d("Error: ", "" + e);
+            Log.d("NewOpponentForm", "" + e);
         }
     }
 }

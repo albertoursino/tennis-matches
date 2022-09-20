@@ -18,10 +18,11 @@ public class Match {
     public String result;
     public int oppId;
 
-    public Match(int matchId, Date date, String result) {
+    public Match(int matchId, Date date, String result, int oppId) {
         this.matchId = matchId;
         this.date = date;
         this.result = result;
+        this.oppId = oppId;
     }
 
     public int getMatchId() {

@@ -1,6 +1,8 @@
 package com.example.tennismatches;
 
 
+import static com.example.tennismatches.MainActivity.executorService;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -100,8 +102,6 @@ public class OpponentsListFragment extends Fragment {
                 AppDatabase.class, "tennis-matches-db").build();
         OpponentDao opponentDao = db.opponentDao();
 
-        ExecutorService executorService = new ThreadPoolExecutor(4, 5, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
-
         opponentDao.getAll()
                 .subscribeOn(Schedulers.from(executorService))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -145,7 +145,7 @@ public class OpponentsListFragment extends Fragment {
 
         @Override
         public void onError(Throwable t) {
-            Log.d("Error: ", "" + t);
+            Log.d("OpponentsListFragment", "" + t);
         }
 
         @Override

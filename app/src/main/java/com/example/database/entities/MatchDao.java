@@ -12,7 +12,7 @@ import io.reactivex.Flowable;
 
 @Dao
 public interface MatchDao {
-    @Query("SELECT * FROM `match`")
+    @Query("SELECT * FROM `match` ORDER BY matchId ASC")
     Flowable<List<Match>> getAll();
 
     @Query("SELECT * FROM `match` WHERE matchId IN (:matchIds)")
@@ -20,9 +20,6 @@ public interface MatchDao {
 
     @Query("SELECT * FROM `match` WHERE matchId LIKE :id")
     Flowable<Match> findById(int id);
-
-//    @Query("SELECT * FROM `match` WHERE opponent LIKE :opponent")
-//    Flowable<List<Match>> findMatchesByOpp(Opponent opponent);
 
     @Insert
     Completable insertAll(Match... matches);

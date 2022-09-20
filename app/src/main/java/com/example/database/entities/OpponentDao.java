@@ -14,7 +14,7 @@ import io.reactivex.Single;
 
 @Dao
 public interface OpponentDao {
-    @Query("SELECT * FROM opponent")
+    @Query("SELECT * FROM opponent ORDER BY oppId ASC")
     Flowable<List<Opponent>> getAll();
 
     @Query("SELECT * FROM opponent WHERE firstName LIKE :first AND " +
@@ -23,6 +23,11 @@ public interface OpponentDao {
 
     @Query("SELECT * FROM opponent WHERE oppId LIKE :oppId")
     Flowable<Opponent> findById(int oppId);
+
+    @Query("SELECT * FROM opponent " +
+            "JOIN `match` ON opponent.oppId=`match`.oppId " +
+            "WHERE matchId=:matchId;")
+    Flowable<Opponent> findByMatchId(int matchId);
 
     @Insert
     Completable insertAll(Opponent... opponents);

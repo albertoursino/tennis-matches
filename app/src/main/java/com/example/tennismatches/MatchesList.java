@@ -116,7 +116,7 @@ public class MatchesList extends AppCompatActivity {
 
         @Override
         public void onError(Throwable t) {
-            Log.d("Error: ", "" + t);
+            Log.d("MatchesList", "" + t);
         }
 
         @Override

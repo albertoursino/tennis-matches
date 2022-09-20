@@ -1,5 +1,7 @@
 package com.example.tennismatches;
 
+import static com.example.tennismatches.MainActivity.executorService;
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -10,9 +12,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -21,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
@@ -41,10 +41,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.CompletableObserver;
 import io.reactivex.FlowableSubscriber;
@@ -57,8 +53,9 @@ public class NewMatchForm extends AppCompatActivity {
     DatePickerDialog datePickerDialog;
     Button datePickerButton;
     Date matchDate;
-    List<Opponent> opponentsAvailable;
+    List<Opponent> allOpponents;
     Opponent selectedOpp;
+    int oppId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,16 +67,15 @@ public class NewMatchForm extends AppCompatActivity {
         OpponentDao opponentDao = db.opponentDao();
         MatchDao matchDao = db.matchDao();
 
-        ExecutorService executorService = new ThreadPoolExecutor(4, 5, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
-
         opponentDao.getAll()
                 .subscribeOn(Schedulers.from(executorService))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DbGetCompleteObserver(getApplicationContext()));
+                .subscribe(new getAllOpponentsObserver());
 
+        // Result
         EditText result = findViewById(R.id.result);
-
         Button buttonErase = findViewById(R.id.erase_result_btn);
+
         buttonErase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,6 +110,7 @@ public class NewMatchForm extends AppCompatActivity {
             }
         });
 
+        // Date field
         initDatePicker();
         datePickerButton = findViewById(R.id.match_date);
         datePickerButton.setText(getTodayDate());
@@ -124,36 +121,42 @@ public class NewMatchForm extends AppCompatActivity {
             }
         });
 
+        // Add match button
         Spinner spinner = (Spinner) findViewById(R.id.opponents_list_spinner);
-
         Button addMatchBtn = findViewById(R.id.add_match_btn);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                oppId = (int) l;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
         addMatchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                 int idMatch = sharedPref.getInt("id_match", 0);
-                int idOpp = Integer.parseInt(spinner.getSelectedItem().toString().substring(1, 2));
-                for (int i = 0; i < opponentsAvailable.size(); i++) {
-                    if (idOpp == opponentsAvailable.get(i).getOppId()) {
-                        selectedOpp = opponentsAvailable.get(i);
-                        break;
-                    }
-                }
                 String res = result.getText().toString();
                 try {
                     String s = datePickerButton.getText().toString();
-                    matchDate = new SimpleDateFormat("dd-MM-yyyy", Locale.ITALY).parse(s);
+                    matchDate = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALY).parse(s);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Match match = new Match(idMatch, matchDate, res);
+                Match match = new Match(idMatch, matchDate, res, oppId);
                 matchDao.insertAll(match)
                         .subscribeOn(Schedulers.from(executorService))
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new DbInsertCompleteObserver());
+                        .subscribe(new insertMatchObserver());
             }
         });
 
+        // Back button
         ImageView backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,10 +169,9 @@ public class NewMatchForm extends AppCompatActivity {
     private String getTodayDate() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        month += 1;
+        int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        return day + "-" + month + "-" + year;
+        return day + "/" + month + "/" + year;
     }
 
     public void initDatePicker() {
@@ -178,7 +180,7 @@ public class NewMatchForm extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month += 1;
-                String dateStr = day + "-" + month + "-" + year;
+                String dateStr = day + "/" + month + "/" + year;
                 datePickerButton.setText(dateStr);
             }
         };
@@ -191,11 +193,8 @@ public class NewMatchForm extends AppCompatActivity {
         datePickerDialog = new DatePickerDialog(this, style, dateSetListener, year, month, day);
     }
 
-    private class DbInsertCompleteObserver implements CompletableObserver {
-
-        DbInsertCompleteObserver() {
-        }
-
+    // Observers
+    private class insertMatchObserver implements CompletableObserver {
         @Override
         public void onSubscribe(Disposable d) {
         }
@@ -204,6 +203,7 @@ public class NewMatchForm extends AppCompatActivity {
         public void onComplete() {
             Toast.makeText(NewMatchForm.this, "Partita creata!", Toast.LENGTH_SHORT).show();
             Intent myIntent = new Intent(NewMatchForm.this, MainActivity.class);
+            myIntent.putExtra("lastFragment", "matchesList");
             startActivity(myIntent);
             // Update counter for the id of the matches (new match id = actual counter value)
             SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
@@ -211,22 +211,16 @@ public class NewMatchForm extends AppCompatActivity {
             int counter = sharedPref.getInt("id_match", 0);
             editor.putInt("id_match", ++counter);
             editor.apply();
+            finish();
         }
 
         @Override
         public void onError(Throwable e) {
-            Log.d("Error insert match: ", "" + e);
+            Log.d("NewMatchForm", "" + e);
         }
     }
 
-    private class DbGetCompleteObserver implements FlowableSubscriber<List<Opponent>> {
-
-        Context context;
-
-        DbGetCompleteObserver(Context context) {
-            this.context = context;
-        }
-
+    private class getAllOpponentsObserver implements FlowableSubscriber<List<Opponent>> {
         @Override
         public void onSubscribe(Subscription s) {
             s.request(Long.MAX_VALUE);
@@ -234,14 +228,14 @@ public class NewMatchForm extends AppCompatActivity {
 
         @Override
         public void onNext(List<Opponent> opponents) {
-            opponentsAvailable = opponents;
+            allOpponents = opponents;
             List<String> oppsName = new ArrayList<>();
             for (int i = 0; i < opponents.size(); i++) {
-                oppsName.add("(" + opponents.get(i).getOppId() + ") " + opponents.get(i).getFirstName() + " " + opponents.get(i).getLastName());
+                oppsName.add(opponents.get(i).getFirstName() + " " + opponents.get(i).getLastName());
             }
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    context, android.R.layout.simple_spinner_item, oppsName);
+                    getApplicationContext(), android.R.layout.simple_spinner_item, oppsName);
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             Spinner sItems = (Spinner) findViewById(R.id.opponents_list_spinner);
@@ -250,7 +244,7 @@ public class NewMatchForm extends AppCompatActivity {
 
         @Override
         public void onError(Throwable t) {
-            Log.d("Error get opponent: ", "" + t);
+            Log.d("NewMatchForm", "" + t);
         }
 
         @Override
