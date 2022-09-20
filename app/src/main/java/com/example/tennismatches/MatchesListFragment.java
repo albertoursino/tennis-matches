@@ -21,22 +21,21 @@ import com.example.database.entities.Match;
 import com.example.database.entities.MatchDao;
 import com.example.database.entities.Opponent;
 import com.example.database.entities.OpponentDao;
+import com.google.gson.Gson;
 
 import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import de.codecrafters.tableview.TableView;
+import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnDpWidthModel;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
@@ -66,7 +65,7 @@ public class MatchesListFragment extends Fragment {
     AppDatabase db;
     OpponentDao opponentDao;
     MatchDao matchDao;
-    TreeMap<Integer, Pair<Match, Opponent>> matchesOpponents = new TreeMap<>();
+    TreeMap<String, Pair<Match, Opponent>> matchesOpponents = new TreeMap<>();
     List<Match> allMatches = new ArrayList<>();
 
     public MatchesListFragment() {
@@ -107,8 +106,8 @@ public class MatchesListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_matches_list, container, false);
         Context context = view.getContext();
 
-        Button button = view.findViewById(R.id.new_match_btn);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button newMatchBtn = view.findViewById(R.id.new_match_btn);
+        newMatchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(context, NewMatchForm.class);
@@ -120,43 +119,42 @@ public class MatchesListFragment extends Fragment {
         TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(context, 2, 200);
         tableView.setColumnModel(columnModel);
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(context, TABLE_HEADERS));
+        tableView.addDataClickListener(new TableDataClickListener() {
+            @Override
+            public void onDataClicked(int rowIndex, Object clickedData) {
+                Match matchSelected = allMatches.get(allMatches.size() - 1 - rowIndex);
+                Intent myIntent = new Intent(context, MatchPage.class);
+                myIntent.putExtra("matchSelected", new Gson().toJson(matchSelected));
+                startActivity(myIntent);
+                getActivity().finish();
+            }
+        });
 
         db = Room.databaseBuilder(context,
                 AppDatabase.class, "tennis-matches-db").build();
         matchDao = db.matchDao();
         opponentDao = db.opponentDao();
 
-        getAllMatches(context);
+        matchDao.getAll()
+                .subscribeOn(Schedulers.from(executorService))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new getMatchesObserver());
 
         // Inflate the layout for this fragment
         return view;
     }
 
-    public void getAllMatches(Context context) {
-        matchDao.getAll()
-                .subscribeOn(Schedulers.from(executorService))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new getMatchesObserver(context));
-    }
-
     public void getOpponentsWithMatches() {
         for (int i = 0; i < allMatches.size(); i++) {
-            int matchId = allMatches.get(i).getMatchId();
+            String matchId = allMatches.get(i).getMatchId();
             opponentDao.findByMatchId(matchId)
                     .subscribeOn(Schedulers.from(executorService))
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new getOpponentsObserver(allMatches.get(i)));
+                    .subscribe(new getOpponentObserver(allMatches.get(i)));
         }
     }
 
     private class getMatchesObserver implements FlowableSubscriber<List<Match>> {
-
-        Context context;
-
-        getMatchesObserver(Context context) {
-            this.context = context;
-        }
-
         @Override
         public void onSubscribe(Subscription s) {
             s.request(Long.MAX_VALUE);
@@ -178,11 +176,11 @@ public class MatchesListFragment extends Fragment {
         }
     }
 
-    private class getOpponentsObserver implements FlowableSubscriber<Opponent> {
+    private class getOpponentObserver implements FlowableSubscriber<Opponent> {
 
         Match match;
 
-        getOpponentsObserver(Match match) {
+        getOpponentObserver(Match match) {
             this.match = match;
         }
 
@@ -211,9 +209,9 @@ public class MatchesListFragment extends Fragment {
     }
 
     private void populateMatchesTable() {
-        Iterator<Map.Entry<Integer, Pair<Match, Opponent>>> it = matchesOpponents.entrySet().iterator();
+        Iterator<Map.Entry<String, Pair<Match, Opponent>>> it = matchesOpponents.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<Integer, Pair<Match, Opponent>> pair = (Map.Entry<Integer, Pair<Match, Opponent>>) it.next();
+            Map.Entry<String, Pair<Match, Opponent>> pair = (Map.Entry<String, Pair<Match, Opponent>>) it.next();
             it.remove(); // avoids a ConcurrentModificationException
             Calendar c = Calendar.getInstance();
             Date date = pair.getValue().first.getDate();

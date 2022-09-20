@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    public NavController navController;
+    public static NavController navController;
     private long backPressed;
     private static final int TIME_INTERVAL_BACK_BTN = 2000;
     public static final ExecutorService executorService =

@@ -1,12 +1,11 @@
 package com.example.tennismatches;
 
 import static com.example.tennismatches.MainActivity.executorService;
+import static com.example.tennismatches.Utils.createUniqueId;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -54,8 +53,7 @@ public class NewMatchForm extends AppCompatActivity {
     Button datePickerButton;
     Date matchDate;
     List<Opponent> allOpponents;
-    Opponent selectedOpp;
-    int oppId;
+    String oppId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +126,8 @@ public class NewMatchForm extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                oppId = (int) l;
+                oppId = allOpponents.get((int) l).getOppId();
+                int x = 1;
             }
 
             @Override
@@ -139,8 +138,7 @@ public class NewMatchForm extends AppCompatActivity {
         addMatchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-                int idMatch = sharedPref.getInt("id_match", 0);
+                String idMatch = createUniqueId("MAT");
                 String res = result.getText().toString();
                 try {
                     String s = datePickerButton.getText().toString();
@@ -205,12 +203,6 @@ public class NewMatchForm extends AppCompatActivity {
             Intent myIntent = new Intent(NewMatchForm.this, MainActivity.class);
             myIntent.putExtra("lastFragment", "matchesList");
             startActivity(myIntent);
-            // Update counter for the id of the matches (new match id = actual counter value)
-            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            int counter = sharedPref.getInt("id_match", 0);
-            editor.putInt("id_match", ++counter);
-            editor.apply();
             finish();
         }
 

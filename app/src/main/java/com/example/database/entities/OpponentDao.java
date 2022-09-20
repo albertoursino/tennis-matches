@@ -1,9 +1,11 @@
 package com.example.database.entities;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.RewriteQueriesToDropUnusedColumns;
 
 import java.util.List;
 
@@ -24,10 +26,10 @@ public interface OpponentDao {
     @Query("SELECT * FROM opponent WHERE oppId LIKE :oppId")
     Flowable<Opponent> findById(int oppId);
 
-    @Query("SELECT * FROM opponent " +
+    @Query("SELECT Opponent.oppId, firstName, lastName FROM opponent " +
             "JOIN `match` ON opponent.oppId=`match`.oppId " +
             "WHERE matchId=:matchId;")
-    Flowable<Opponent> findByMatchId(int matchId);
+    Flowable<Opponent> findByMatchId(String matchId);
 
     @Insert
     Completable insertAll(Opponent... opponents);

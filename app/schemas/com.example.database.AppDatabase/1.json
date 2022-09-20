@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b0a18c08f4de6d08a0cc614de3482c3a",
+    "identityHash": "b024fcbb51394e80f7621875663c2475",
     "entities": [
       {
         "tableName": "Match",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`matchId` INTEGER NOT NULL, `date` INTEGER, `result` TEXT, `oppId` INTEGER NOT NULL, PRIMARY KEY(`matchId`), FOREIGN KEY(`oppId`) REFERENCES `Opponent`(`oppId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`matchId` TEXT NOT NULL, `date` INTEGER, `result` TEXT, `oppId` TEXT, PRIMARY KEY(`matchId`), FOREIGN KEY(`oppId`) REFERENCES `Opponent`(`oppId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "matchId",
             "columnName": "matchId",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -29,8 +29,8 @@
           {
             "fieldPath": "oppId",
             "columnName": "oppId",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -39,7 +39,17 @@
           ],
           "autoGenerate": false
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_Match_oppId",
+            "unique": true,
+            "columnNames": [
+              "oppId"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_Match_oppId` ON `${TABLE_NAME}` (`oppId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "Opponent",
@@ -56,12 +66,12 @@
       },
       {
         "tableName": "Opponent",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`oppId` INTEGER NOT NULL, `firstName` TEXT, `lastName` TEXT, PRIMARY KEY(`oppId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`oppId` TEXT NOT NULL, `firstName` TEXT, `lastName` TEXT, PRIMARY KEY(`oppId`))",
         "fields": [
           {
             "fieldPath": "oppId",
             "columnName": "oppId",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -90,7 +100,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b0a18c08f4de6d08a0cc614de3482c3a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b024fcbb51394e80f7621875663c2475')"
     ]
   }
 }

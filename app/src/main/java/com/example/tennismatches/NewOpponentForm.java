@@ -1,8 +1,8 @@
 package com.example.tennismatches;
 
-import android.content.Context;
+import static com.example.tennismatches.Utils.createUniqueId;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -51,8 +51,7 @@ public class NewOpponentForm extends AppCompatActivity {
         addOppBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-                int id_opp = sharedPref.getInt("id_opp", 0);
+                String id_opp = createUniqueId("OPP");
                 Opponent opponent = new Opponent(id_opp, firstName.getText().toString(), secondName.getText().toString());
                 opponentDao.insertAll(opponent)
                         .subscribeOn(Schedulers.from(executorService))
@@ -81,12 +80,6 @@ public class NewOpponentForm extends AppCompatActivity {
             Intent myIntent = new Intent(NewOpponentForm.this, MainActivity.class);
             myIntent.putExtra("lastFragment", "opponentsList");
             startActivity(myIntent);
-            // Update counter for the id of the matches (new match id = actual counter value)
-            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            int counter = sharedPref.getInt("id_opp", 0);
-            editor.putInt("id_opp", ++counter);
-            editor.apply();
             finish();
         }
 

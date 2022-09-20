@@ -6,30 +6,27 @@ import static com.example.tennismatches.MainActivity.executorService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.room.Room;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.fragment.app.Fragment;
+import androidx.room.Room;
+
 import com.example.database.AppDatabase;
 import com.example.database.entities.Opponent;
 import com.example.database.entities.OpponentDao;
+import com.google.gson.Gson;
 
 import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import de.codecrafters.tableview.TableView;
+import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnDpWidthModel;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
@@ -56,6 +53,8 @@ public class OpponentsListFragment extends Fragment {
     TableView tableView;
     List<String[]> tableData = new ArrayList<>();
     private static final String[] TABLE_HEADERS = {"I tuoi avversari"};
+    List<Opponent> allOpponents = new ArrayList<>();
+    Context context;
 
     public OpponentsListFragment() {
         // Required empty public constructor
@@ -93,25 +92,37 @@ public class OpponentsListFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_opponents_list, container, false);
-        tableView = view.findViewById(R.id.opponents_table);
-        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(view.getContext(), 1, 500);
-        tableView.setColumnModel(columnModel);
-        tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(view.getContext(), TABLE_HEADERS));
+        context = view.getContext();
 
-        AppDatabase db = Room.databaseBuilder(view.getContext(),
+        tableView = view.findViewById(R.id.opponents_table);
+        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(context, 1, 500);
+        tableView.setColumnModel(columnModel);
+        tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(context, TABLE_HEADERS));
+        tableView.addDataClickListener(new TableDataClickListener() {
+            @Override
+            public void onDataClicked(int rowIndex, Object clickedData) {
+                Opponent opponentSelected = allOpponents.get(rowIndex);
+                Intent myIntent = new Intent(context, OpponentPage.class);
+                myIntent.putExtra("opponentSelected", new Gson().toJson(opponentSelected));
+                startActivity(myIntent);
+                getActivity().finish();
+            }
+        });
+
+        AppDatabase db = Room.databaseBuilder(context,
                 AppDatabase.class, "tennis-matches-db").build();
         OpponentDao opponentDao = db.opponentDao();
 
         opponentDao.getAll()
                 .subscribeOn(Schedulers.from(executorService))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DbGetOppCompleteObserver(view.getContext()));
+                .subscribe(new getAllOpponentsObserver());
 
         Button button = view.findViewById(R.id.new_opp_btn);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(view.getContext(), NewOpponentForm.class);
+                Intent myIntent = new Intent(context, NewOpponentForm.class);
                 startActivity(myIntent);
             }
         });
@@ -120,14 +131,7 @@ public class OpponentsListFragment extends Fragment {
         return view;
     }
 
-    private class DbGetOppCompleteObserver implements FlowableSubscriber<List<Opponent>> {
-
-        Context context;
-
-        DbGetOppCompleteObserver(Context context) {
-            this.context = context;
-        }
-
+    private class getAllOpponentsObserver implements FlowableSubscriber<List<Opponent>> {
         @Override
         public void onSubscribe(Subscription s) {
             s.request(Long.MAX_VALUE);
@@ -135,10 +139,9 @@ public class OpponentsListFragment extends Fragment {
 
         @Override
         public void onNext(List<Opponent> opponents) {
+            allOpponents = opponents;
             for (int i = 0; i < opponents.size(); i++) {
-                tableData.add(new String[]{
-                        opponents.get(i).getFirstName() + " " +
-                                opponents.get(i).getLastName()});
+                tableData.add(new String[]{opponents.get(i).getFirstName() + " " + opponents.get(i).getLastName()});
             }
             tableView.setDataAdapter(new SimpleTableDataAdapter(context, tableData));
         }
