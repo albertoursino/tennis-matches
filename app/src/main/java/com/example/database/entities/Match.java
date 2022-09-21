@@ -12,7 +12,7 @@ import java.util.Date;
         parentColumns = {"oppId"},
         childColumns = {"oppId"},
         onDelete = ForeignKey.CASCADE),
-}, indices = {@Index(value = {"oppId"}, unique = true)})
+})
 public class Match {
     @PrimaryKey
     @NonNull
@@ -21,12 +21,14 @@ public class Match {
     public Date date;
     public String result;
     public String oppId;
+    public String notes;
 
-    public Match(@NonNull String matchId, Date date, String result, String oppId) {
+    public Match(@NonNull String matchId, Date date, String result, String oppId, String notes) {
         this.matchId = matchId;
         this.date = date;
         this.result = result;
         this.oppId = oppId;
+        this.notes = notes;
     }
 
     @NonNull

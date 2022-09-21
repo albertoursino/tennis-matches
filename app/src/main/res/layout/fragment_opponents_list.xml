@@ -26,7 +26,7 @@
             android:id="@+id/new_opp_btn"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:background="@drawable/roundedbutton"
+            android:background="@drawable/rounded_button"
             android:text="+"
             android:textSize="35dp"
             app:layout_constraintBottom_toBottomOf="parent"

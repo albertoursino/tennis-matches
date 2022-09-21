@@ -4,77 +4,113 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewOpponentForm"
-    android:background="@color/green_1">
+    android:background="@color/green_1"
+    android:fitsSystemWindows="true"
+    tools:context=".NewOpponentForm">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        app:titleTextColor="@color/white"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/white">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/toolbarTitleText"
+            android:layout_marginStart="30dp"
+            android:text="Nuovo avversario"
             android:textColor="@color/white"
-            android:textSize="@dimen/toolbarTileSize"
-            android:layout_marginStart="@dimen/toolbarTitleMarginLeft"
+            android:textSize="@dimen/toolbarTitleSize"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/back_button"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/back_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="@dimen/backArrowMarginRight"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="@dimen/toolbarSidesMargin"
             android:src="@drawable/ic_baseline_arrow_back_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/add_opp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/toolbarSidesMargin"
+            android:text="SALVA"
+            android:textColor="@color/white"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <EditText
-        android:id="@+id/first_name_et"
-        android:layout_width="200dp"
-        android:layout_height="45dp"
+        android:id="@+id/first_name"
+        android:layout_width="match_parent"
+        android:layout_height="42sp"
+        android:layout_marginHorizontal="@dimen/marginHorizontal"
+        android:layout_marginTop="@dimen/marginTop"
+        android:background="@drawable/edit_text_border"
         android:hint="Nome"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/second_name_et"
+        android:inputType="textCapSentences"
+        android:nextFocusDown="@+id/last_name"
+        android:paddingHorizontal="@dimen/paddingText"
+        android:paddingVertical="@dimen/paddingText"
+        android:singleLine="true"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/last_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintVertical_bias="0.3"/>
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_chainStyle="packed">
+        <requestFocus />
+    </EditText>
+
 
     <EditText
-        android:id="@+id/second_name_et"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/last_name"
+        android:layout_width="match_parent"
+        android:layout_height="42sp"
+        android:layout_marginHorizontal="@dimen/marginHorizontal"
+        android:layout_marginTop="@dimen/marginTop"
+        android:background="@drawable/edit_text_border"
         android:hint="Cognome"
-        android:minHeight="48dp"
+        android:imeOptions="actionNext"
+        android:inputType="textCapSentences"
+        android:maxLines="1"
+        android:nextFocusDown="@+id/notes"
+        android:paddingHorizontal="@dimen/paddingText"
+        android:paddingVertical="@dimen/paddingText"
+        android:singleLine="true"
         android:text=""
-        app:layout_constraintBottom_toTopOf="@+id/add_opp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/first_name_et" />
+        app:layout_constraintTop_toBottomOf="@+id/first_name" />
 
-    <Button
-        android:id="@+id/add_opp"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/notes"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Aggiungi"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/second_name_et"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginHorizontal="@dimen/marginHorizontal"
+        android:layout_marginTop="@dimen/marginTop"
+        android:background="@drawable/edit_text_border"
+        android:hint="Note"
+        android:minHeight="70sp"
+        android:paddingHorizontal="@dimen/paddingText"
+        android:paddingVertical="@dimen/paddingText"
+        android:text=""
+        app:layout_constraintTop_toBottomOf="@id/last_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

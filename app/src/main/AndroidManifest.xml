@@ -35,12 +35,14 @@
             android:name=".NewMatchForm"
             android:exported="false"
             android:noHistory="true"
-            android:theme="@style/Theme.TennisMatches.NoActionBar" />
+            android:theme="@style/Theme.TennisMatches.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity
             android:name=".NewOpponentForm"
             android:exported="false"
             android:noHistory="true"
-            android:theme="@style/Theme.TennisMatches.NoActionBar" />
+            android:theme="@style/Theme.TennisMatches.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
     </application>
 
 </manifest>

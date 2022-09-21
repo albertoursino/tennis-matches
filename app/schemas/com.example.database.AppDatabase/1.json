@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b024fcbb51394e80f7621875663c2475",
+    "identityHash": "d615389e5df65615786871bbf04ec0df",
     "entities": [
       {
         "tableName": "Match",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`matchId` TEXT NOT NULL, `date` INTEGER, `result` TEXT, `oppId` TEXT, PRIMARY KEY(`matchId`), FOREIGN KEY(`oppId`) REFERENCES `Opponent`(`oppId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`matchId` TEXT NOT NULL, `date` INTEGER, `result` TEXT, `oppId` TEXT, `notes` TEXT, PRIMARY KEY(`matchId`), FOREIGN KEY(`oppId`) REFERENCES `Opponent`(`oppId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "matchId",
@@ -31,6 +31,12 @@
             "columnName": "oppId",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -39,17 +45,7 @@
           ],
           "autoGenerate": false
         },
-        "indices": [
-          {
-            "name": "index_Match_oppId",
-            "unique": true,
-            "columnNames": [
-              "oppId"
-            ],
-            "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_Match_oppId` ON `${TABLE_NAME}` (`oppId`)"
-          }
-        ],
+        "indices": [],
         "foreignKeys": [
           {
             "table": "Opponent",
@@ -66,7 +62,7 @@
       },
       {
         "tableName": "Opponent",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`oppId` TEXT NOT NULL, `firstName` TEXT, `lastName` TEXT, PRIMARY KEY(`oppId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`oppId` TEXT NOT NULL, `firstName` TEXT, `lastName` TEXT, `notes` TEXT, PRIMARY KEY(`oppId`))",
         "fields": [
           {
             "fieldPath": "oppId",
@@ -85,6 +81,12 @@
             "columnName": "lastName",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -100,7 +102,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b024fcbb51394e80f7621875663c2475')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd615389e5df65615786871bbf04ec0df')"
     ]
   }
 }

@@ -13,12 +13,14 @@ public class Opponent {
     // Entity properties
     public String firstName;
     public String lastName;
+    public String notes;
 
     // Constructor
-    public Opponent(@NonNull String oppId, String firstName, String lastName) {
+    public Opponent(@NonNull String oppId, String firstName, String lastName, String notes) {
         this.oppId = oppId;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.notes = notes;
     }
 
     // Get methods

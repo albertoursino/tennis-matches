@@ -19,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -72,14 +73,6 @@ public class NewMatchForm extends AppCompatActivity {
 
         // Result
         EditText result = findViewById(R.id.result);
-        Button buttonErase = findViewById(R.id.erase_result_btn);
-
-        buttonErase.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                result.setText("");
-            }
-        });
 
         result.addTextChangedListener(new TextWatcher() {
             @Override
@@ -119,9 +112,10 @@ public class NewMatchForm extends AppCompatActivity {
             }
         });
 
-        // Add match button
+        // Add match
         Spinner spinner = (Spinner) findViewById(R.id.opponents_list_spinner);
-        Button addMatchBtn = findViewById(R.id.add_match_btn);
+        TextView addMatchBtn = findViewById(R.id.add_match_btn);
+        EditText notes = findViewById(R.id.notes);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -146,7 +140,7 @@ public class NewMatchForm extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Match match = new Match(idMatch, matchDate, res, oppId);
+                Match match = new Match(idMatch, matchDate, res, oppId, notes.getText().toString());
                 matchDao.insertAll(match)
                         .subscribeOn(Schedulers.from(executorService))
                         .observeOn(AndroidSchedulers.mainThread())

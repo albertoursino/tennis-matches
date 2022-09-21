@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,16 +44,19 @@ public class NewOpponentForm extends AppCompatActivity {
 
         executorService = new ThreadPoolExecutor(4, 5, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
 
-        Button addOppBtn = findViewById(R.id.add_opp);
+        TextView addOppBtn = findViewById(R.id.add_opp);
 
-        EditText firstName = findViewById(R.id.first_name_et);
-        EditText secondName = findViewById(R.id.second_name_et);
+        EditText firstName = findViewById(R.id.first_name);
+        EditText secondName = findViewById(R.id.last_name);
+        EditText notes = findViewById(R.id.notes);
 
         addOppBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String id_opp = createUniqueId("OPP");
-                Opponent opponent = new Opponent(id_opp, firstName.getText().toString(), secondName.getText().toString());
+                Opponent opponent = new Opponent(id_opp, firstName.getText().toString(),
+                        secondName.getText().toString(),
+                        notes.getText().toString());
                 opponentDao.insertAll(opponent)
                         .subscribeOn(Schedulers.from(executorService))
                         .observeOn(AndroidSchedulers.mainThread())

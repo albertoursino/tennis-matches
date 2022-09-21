@@ -1,6 +1,8 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="toolbarTileSize">22sp</dimen>
-    <dimen name="backArrowMarginRight">12sp</dimen>
-    <dimen name="toolbarTitleMarginLeft">12sp</dimen>
+    <dimen name="toolbarTitleSize">20sp</dimen>
+    <dimen name="toolbarSidesMargin">15sp</dimen>
+    <dimen name="paddingText">10sp</dimen>
+    <dimen name="marginHorizontal">10sp</dimen>
+    <dimen name="marginTop">10sp</dimen>
 </resources>

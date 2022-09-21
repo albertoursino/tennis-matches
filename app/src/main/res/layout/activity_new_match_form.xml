@@ -4,38 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewMatchForm"
-    android:background="@color/green_1">
+    android:background="@color/green_1"
+    android:fitsSystemWindows="true"
+    tools:context=".NewMatchForm">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        app:titleTextColor="@color/white"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:titleTextColor="@color/white">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/toolbarTitleText"
+            android:layout_marginStart="30dp"
+            android:text="Nuova partita"
             android:textColor="@color/white"
-            android:textSize="@dimen/toolbarTileSize"
-            android:layout_marginStart="@dimen/toolbarTitleMarginLeft"
+            android:textSize="@dimen/toolbarTitleSize"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/back_button"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/back_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="@dimen/backArrowMarginRight"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="@dimen/toolbarSidesMargin"
             android:src="@drawable/ic_baseline_arrow_back_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/add_match_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/toolbarSidesMargin"
+            android:text="SALVA"
+            android:textColor="@color/white"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,59 +59,64 @@
 
     <Spinner
         android:id="@+id/opponents_list_spinner"
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        app:layout_constraintBottom_toTopOf="@+id/result"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginHorizontal="@dimen/marginHorizontal"
+        android:layout_marginTop="@dimen/marginTop"
+        android:paddingStart="3sp"
+        app:layout_constraintBottom_toTopOf="@+id/match_date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintVertical_chainStyle="packed" />
-
-    <EditText
-        android:id="@+id/result"
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        android:digits="01234567 -"
-        android:hint="Risultato"
-        android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/match_date"
-        app:layout_constraintEnd_toStartOf="@+id/erase_result_btn"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/opponents_list_spinner"
-        android:layout_marginLeft="40dp"/>
 
     <Button
         android:id="@+id/match_date"
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        android:textColor="@color/black"
         style="?android:spinnerStyle"
-        app:layout_constraintBottom_toTopOf="@+id/add_match_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/result"/>
-
-    <Button
-        android:id="@+id/add_match_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Aggiungi"
+        android:layout_marginHorizontal="@dimen/marginHorizontal"
+        android:layout_marginTop="@dimen/marginTop"
+        android:minHeight="42sp"
+        android:padding="@dimen/paddingText"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@id/result"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/opponents_list_spinner" />
+
+    <EditText
+        android:id="@+id/result"
+        android:layout_width="match_parent"
+        android:layout_height="42sp"
+        android:layout_marginHorizontal="@dimen/marginHorizontal"
+        android:layout_marginTop="@dimen/marginTop"
+        android:background="@drawable/edit_text_border"
+        android:digits="01234567 -"
+        android:hint="Risultato"
+        android:inputType="number"
+        android:padding="@dimen/paddingText"
+        app:layout_constraintBottom_toTopOf="@+id/notes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/match_date"/>
+
+    <EditText
+        android:id="@+id/notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/marginHorizontal"
+        android:layout_marginTop="@dimen/marginTop"
+        android:background="@drawable/edit_text_border"
+        android:hint="Note"
+        android:minHeight="70sp"
+        android:paddingHorizontal="@dimen/paddingText"
+        android:paddingVertical="@dimen/paddingText"
+        android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/match_date"
-        android:layout_marginTop="20dp"/>
-
-    <Button
-        android:id="@+id/erase_result_btn"
-        android:layout_width="40dp"
-        android:layout_height="45dp"
-        android:text="X"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.058"
-        app:layout_constraintStart_toEndOf="@+id/result"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/result" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
