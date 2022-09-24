@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.room.Room;
@@ -149,6 +150,7 @@ public class OpponentsListFragment extends Fragment {
         @Override
         public void onError(Throwable t) {
             Log.d("OpponentsListFragment", "" + t);
+            Toast.makeText(getContext(), "Some error has occurred", Toast.LENGTH_SHORT).show();
         }
 
         @Override

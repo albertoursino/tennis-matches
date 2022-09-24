@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/green_1"
     android:fitsSystemWindows="true"
-    tools:context=".NewOpponentForm">
+    tools:context=".NewOpponentForm"
+    android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
@@ -34,8 +35,8 @@
 
         <ImageView
             android:id="@+id/back_button"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginStart="@dimen/toolbarSidesMargin"
             android:src="@drawable/ic_baseline_arrow_back_24"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -55,12 +56,14 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
     <EditText
         android:id="@+id/first_name"
         android:layout_width="match_parent"
         android:layout_height="42sp"
         android:layout_marginHorizontal="@dimen/marginHorizontal"
-        android:layout_marginTop="@dimen/marginTop"
+        android:layout_marginTop="20sp"
+        android:layout_marginBottom="@dimen/marginVertical"
         android:background="@drawable/edit_text_border"
         android:hint="Nome"
         android:inputType="textCapSentences"
@@ -68,23 +71,14 @@
         android:paddingHorizontal="@dimen/paddingText"
         android:paddingVertical="@dimen/paddingText"
         android:singleLine="true"
-        android:text=""
-        app:layout_constraintBottom_toTopOf="@+id/last_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintVertical_chainStyle="packed">
-        <requestFocus />
-    </EditText>
-
+        android:text="" />
 
     <EditText
         android:id="@+id/last_name"
         android:layout_width="match_parent"
         android:layout_height="42sp"
         android:layout_marginHorizontal="@dimen/marginHorizontal"
-        android:layout_marginTop="@dimen/marginTop"
+        android:layout_marginVertical="@dimen/marginVertical"
         android:background="@drawable/edit_text_border"
         android:hint="Cognome"
         android:imeOptions="actionNext"
@@ -94,23 +88,19 @@
         android:paddingHorizontal="@dimen/paddingText"
         android:paddingVertical="@dimen/paddingText"
         android:singleLine="true"
-        android:text=""
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/first_name" />
+        android:text="" />
 
     <EditText
         android:id="@+id/notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/marginHorizontal"
-        android:layout_marginTop="@dimen/marginTop"
+        android:layout_marginVertical="@dimen/marginVertical"
         android:background="@drawable/edit_text_border"
         android:hint="Note"
         android:minHeight="70sp"
         android:paddingHorizontal="@dimen/paddingText"
         android:paddingVertical="@dimen/paddingText"
-        android:text=""
-        app:layout_constraintTop_toBottomOf="@id/last_name" />
+        android:text="" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

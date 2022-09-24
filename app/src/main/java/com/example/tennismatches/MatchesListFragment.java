@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.database.AppDatabase;
 import com.example.database.entities.Match;
@@ -60,7 +61,7 @@ public class MatchesListFragment extends Fragment {
     private String mParam2;
 
     List<String[]> tableData = new ArrayList<>();
-    private final String[] TABLE_HEADERS = {"Le tue partite", "Data"};
+    private final String[] TABLE_HEADERS = {"Le tue partite"};
     TableView<String[]> tableView;
     AppDatabase db;
     OpponentDao opponentDao;
@@ -116,7 +117,7 @@ public class MatchesListFragment extends Fragment {
         });
 
         tableView = view.findViewById(R.id.matches_table);
-        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(context, 2, 200);
+        TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(context, 1, 1000);
         tableView.setColumnModel(columnModel);
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(context, TABLE_HEADERS));
         tableView.addDataClickListener(new TableDataClickListener() {
@@ -169,6 +170,7 @@ public class MatchesListFragment extends Fragment {
         @Override
         public void onError(Throwable t) {
             Log.d("MatchesListFragment", "" + t);
+            Toast.makeText(getContext(), "Some error has occurred", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -200,6 +202,7 @@ public class MatchesListFragment extends Fragment {
         @Override
         public void onError(Throwable t) {
             Log.d("MatchesListFragment", "" + t);
+            Toast.makeText(getContext(), "Some error has occurred", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -217,7 +220,7 @@ public class MatchesListFragment extends Fragment {
             Date date = pair.getValue().first.getDate();
             c.setTime(date);
             tableData.add(new String[]{
-                    "vs " + pair.getValue().second.getFirstName() + " " + pair.getValue().second.getLastName(),
+                    "vs " + pair.getValue().second.getFirstName() + " " + pair.getValue().second.getLastName() + " il " +
                     c.get(Calendar.DAY_OF_MONTH) + "/" + (c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR)
             });
         }

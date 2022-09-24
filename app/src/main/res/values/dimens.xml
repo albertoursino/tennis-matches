@@ -4,5 +4,6 @@
     <dimen name="toolbarSidesMargin">15sp</dimen>
     <dimen name="paddingText">10sp</dimen>
     <dimen name="marginHorizontal">10sp</dimen>
-    <dimen name="marginTop">10sp</dimen>
+    <dimen name="marginVertical">5sp</dimen>
+    <dimen name="fieldHeight">42sp</dimen>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.tennismatches;
 
+import static android.view.KeyEvent.KEYCODE_DEL;
 import static com.example.tennismatches.MainActivity.executorService;
 import static com.example.tennismatches.Utils.createUniqueId;
 
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,6 +39,7 @@ import org.reactivestreams.Subscription;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -55,6 +58,7 @@ public class NewMatchForm extends AppCompatActivity {
     Date matchDate;
     List<Opponent> allOpponents;
     String oppId;
+    String fieldType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,15 +83,15 @@ public class NewMatchForm extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String str = result.getText().toString();
                 if (str.length() >= 1) {
-                    boolean matches = str.substring(str.length() - 1).matches("\\d");
+                    boolean matches = str.substring(str.length() - 1).matches("\\d"); // Is last char a digit?
                     if (str.length() >= 3) {
                         if (str.substring(str.length() - 3).matches("\\d-\\d")) {
-                            result.append(" ");
+                            s.append(' ');
                         } else if (matches) {
-                            result.append("-");
+                            s.append('-');
                         }
                     } else if (matches) {
-                        result.append("-");
+                        s.append('-');
                     }
                 }
             }
@@ -98,6 +102,13 @@ public class NewMatchForm extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        findViewById(R.id.erase_result).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                result.getText().clear();
             }
         });
 
@@ -113,7 +124,7 @@ public class NewMatchForm extends AppCompatActivity {
         });
 
         // Add match
-        Spinner spinner = (Spinner) findViewById(R.id.opponents_list_spinner);
+        Spinner spinner = findViewById(R.id.opponents_list_spinner);
         TextView addMatchBtn = findViewById(R.id.add_match_btn);
         EditText notes = findViewById(R.id.notes);
 
@@ -121,7 +132,6 @@ public class NewMatchForm extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 oppId = allOpponents.get((int) l).getOppId();
-                int x = 1;
             }
 
             @Override
@@ -231,6 +241,7 @@ public class NewMatchForm extends AppCompatActivity {
         @Override
         public void onError(Throwable t) {
             Log.d("NewMatchForm", "" + t);
+            Toast.makeText(NewMatchForm.this, "Some error has occurred", Toast.LENGTH_SHORT).show();
         }
 
         @Override

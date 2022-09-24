@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="editTextField">
+        <item name="android:layout_marginVertical">@dimen/marginVertical</item>
+        <item name="android:layout_marginHorizontal">@dimen/marginHorizontal</item>
+        <item name="android:padding">@dimen/paddingText</item>
+        <item name="android:layout_height">@dimen/fieldHeight</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+</resources>

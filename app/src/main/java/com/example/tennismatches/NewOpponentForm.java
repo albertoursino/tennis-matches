@@ -90,6 +90,7 @@ public class NewOpponentForm extends AppCompatActivity {
         @Override
         public void onError(Throwable e) {
             Log.d("NewOpponentForm", "" + e);
+            Toast.makeText(getApplicationContext(), "Some error has occurred", Toast.LENGTH_SHORT).show();
         }
     }
 }
