@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewOpponentForm"
-    android:background="@color/green_1">
+    android:background="@color/green_1"
+    android:orientation="vertical"
+    tools:context=".NewOpponentForm">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        app:titleTextColor="@color/white"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/white">
 
         <TextView
             android:id="@+id/textView"
@@ -42,15 +43,88 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <LinearLayout
+        android:id="@+id/opp_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fieldHeight"
+        android:layout_below="@id/toolbar"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="@dimen/TextViewWidth"
+            android:layout_height="match_parent"
+            android:background="@drawable/text_lines"
+            android:gravity="center"
+            android:text="Avversario"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/opp_tw"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/simple_line"
+            android:gravity="center"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/result_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fieldHeight"
+        android:layout_below="@id/opp_ll"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="@dimen/TextViewWidth"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:background="@drawable/text_lines"
+            android:gravity="center"
+            android:text="Risultato"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/result_tw"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:background="@drawable/simple_line"
+            android:gravity="center"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/date_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fieldHeight"
+        android:layout_below="@id/result_ll"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="@dimen/TextViewWidth"
+            android:layout_height="match_parent"
+            android:background="@drawable/text_lines"
+            android:gravity="center"
+            android:text="Data"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/date_tw"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/simple_line"
+            android:gravity="center"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
     <Button
         android:id="@+id/delete_match_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/TextViewWidth"
         android:layout_height="wrap_content"
+        android:layout_below="@id/date_ll"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30sp"
         android:text="Elimina"
-        app:backgroundTint  ="@color/red"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:backgroundTint="@color/red" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

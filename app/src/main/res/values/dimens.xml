@@ -6,4 +6,5 @@
     <dimen name="marginHorizontal">10sp</dimen>
     <dimen name="marginVertical">5sp</dimen>
     <dimen name="fieldHeight">42sp</dimen>
+    <dimen name="TextViewWidth">100sp</dimen>
 </resources>
