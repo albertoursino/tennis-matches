@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewOpponentForm"
-    android:background="@color/green_1">
+    android:background="@color/green_1"
+    tools:context=".NewOpponentForm">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        app:titleTextColor="@color/white"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/white">
 
         <TextView
             android:id="@+id/textView"
@@ -40,17 +40,95 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/delete_opp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/toolbarSidesMargin"
+            android:text="ELIMINA"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/delete_opp_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Elimina"
-        app:backgroundTint  ="@color/red"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+    <LinearLayout
+        android:id="@+id/name_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fieldHeight"
+        android:layout_below="@id/toolbar"
+        android:orientation="horizontal">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:layout_width="@dimen/TextViewWidth"
+            android:layout_height="match_parent"
+            android:background="@drawable/text_lines"
+            android:gravity="center"
+            android:text="Nome"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/name_tw"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/simple_line"
+            android:gravity="center"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/surname_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fieldHeight"
+        android:layout_below="@id/name_ll"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="@dimen/TextViewWidth"
+            android:layout_height="match_parent"
+            android:background="@drawable/text_lines"
+            android:gravity="center"
+            android:text="Cognome"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/surname_tw"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/simple_line"
+            android:gravity="center"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/note_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/surname_ll"
+        android:minHeight="@dimen/fieldHeight"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="@dimen/TextViewWidth"
+            android:layout_height="match_parent"
+            android:background="@drawable/text_lines"
+            android:gravity="center"
+            android:text="Note"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/notes_tw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/paddingText"
+            android:minHeight="@dimen/fieldHeight"
+            android:background="@drawable/simple_line"
+            android:hint="-"
+            android:gravity="center"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+</RelativeLayout>

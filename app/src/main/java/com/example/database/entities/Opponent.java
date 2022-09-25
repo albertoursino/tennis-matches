@@ -36,4 +36,8 @@ public class Opponent {
     public String getLastName() {
         return lastName;
     }
+
+    public String getNotes() {
+        return notes;
+    }
 }

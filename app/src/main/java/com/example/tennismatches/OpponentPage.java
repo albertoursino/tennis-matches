@@ -1,27 +1,24 @@
 package com.example.tennismatches;
 
-import static com.example.tennismatches.MainActivity.executorService;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.room.Room;
 
 import com.example.database.AppDatabase;
 import com.example.database.entities.Opponent;
 import com.example.database.entities.OpponentDao;
+import com.example.tennismatches.dialogs.OpponentDeleteDialog;
 import com.google.gson.Gson;
 
 import io.reactivex.CompletableObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.schedulers.Schedulers;
 
 public class OpponentPage extends AppCompatActivity {
 
@@ -47,21 +44,23 @@ public class OpponentPage extends AppCompatActivity {
 
         Opponent opponent = new Gson().fromJson(getIntent().getStringExtra("opponentSelected"), Opponent.class);
 
-        Button button = findViewById(R.id.delete_opp_btn);
-
-        button.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.delete_opp_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                opponentDao.delete(opponent)
-                        .subscribeOn(Schedulers.from(executorService))
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new deleteOpponentObserver());
+                DeleteOpponentObserver deleteOpponentObserver = new DeleteOpponentObserver();
+                DialogFragment newFragment = new OpponentDeleteDialog(opponentDao, opponent, deleteOpponentObserver,
+                        "Sei sicuro di voler eliminare " + opponent.getFirstName() + " " + opponent.getLastName() + "?");
+                newFragment.show(getSupportFragmentManager(), "delete_match");
             }
         });
 
+        // Populating fields
+        ((TextView) findViewById(R.id.name_tw)).setText(opponent.getFirstName());
+        ((TextView) findViewById(R.id.surname_tw)).setText(opponent.getLastName());
+        ((TextView) findViewById(R.id.notes_tw)).setText(opponent.getNotes());
     }
 
-    private class deleteOpponentObserver implements CompletableObserver {
+    public class DeleteOpponentObserver implements CompletableObserver {
 
         @Override
         public void onSubscribe(Disposable d) {

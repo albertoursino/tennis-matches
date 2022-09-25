@@ -95,6 +95,10 @@ public class OpponentsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_opponents_list, container, false);
         context = view.getContext();
 
+        AppDatabase db = Room.databaseBuilder(context,
+                AppDatabase.class, "tennis-matches-db").build();
+        OpponentDao opponentDao = db.opponentDao();
+
         tableView = view.findViewById(R.id.opponents_table);
         TableColumnDpWidthModel columnModel = new TableColumnDpWidthModel(context, 1, 500);
         tableView.setColumnModel(columnModel);
@@ -109,10 +113,6 @@ public class OpponentsListFragment extends Fragment {
                 getActivity().finish();
             }
         });
-
-        AppDatabase db = Room.databaseBuilder(context,
-                AppDatabase.class, "tennis-matches-db").build();
-        OpponentDao opponentDao = db.opponentDao();
 
         opponentDao.getAll()
                 .subscribeOn(Schedulers.from(executorService))

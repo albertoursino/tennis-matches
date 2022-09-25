@@ -3,12 +3,12 @@ package com.example.tennismatches;
 import static com.example.tennismatches.MainActivity.executorService;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,28 +18,36 @@ import com.example.database.entities.Match;
 import com.example.database.entities.MatchDao;
 import com.example.database.entities.Opponent;
 import com.example.database.entities.OpponentDao;
+import com.example.tennismatches.dialogs.MatchDeleteDialog;
 import com.google.gson.Gson;
 
 import org.reactivestreams.Subscription;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.CompletableObserver;
 import io.reactivex.FlowableSubscriber;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 public class MatchPage extends AppCompatActivity {
+
+    AppDatabase database;
+    MatchDao matchDao;
+    OpponentDao opponentDao;
+    Match match;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_page);
+
+        database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "tennis-matches-db").build();
+        matchDao = database.matchDao();
+        opponentDao = database.opponentDao();
 
         ImageView backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -52,12 +60,7 @@ public class MatchPage extends AppCompatActivity {
             }
         });
 
-        AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "tennis-matches-db")
-                .build();
-        MatchDao matchDao = database.matchDao();
-        OpponentDao opponentDao = database.opponentDao();
-
-        Match match = new Gson().fromJson(getIntent().getStringExtra("matchSelected"), Match.class);
+        match = new Gson().fromJson(getIntent().getStringExtra("matchSelected"), Match.class);
 
         // Populating fields
         ((TextView) findViewById(R.id.result_tw)).setText(match.getResult());
@@ -70,22 +73,17 @@ public class MatchPage extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new getOpponentByMatchId());
 
-        // Delete match button
-        Button deleteMatchBtn = findViewById(R.id.delete_match_btn);
-
-        deleteMatchBtn.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.delete_match_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                matchDao.delete(match)
-                        .subscribeOn(Schedulers.from(executorService))
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new deleteMatchObserver());
+                DeleteMatchObserver deleteMatchObserver = new DeleteMatchObserver();
+                DialogFragment newFragment = new MatchDeleteDialog(matchDao, match, deleteMatchObserver, "Sei sicuro di voler eliminare la partita?");
+                newFragment.show(getSupportFragmentManager(), "delete_match");
             }
         });
-
     }
 
-    private class deleteMatchObserver implements CompletableObserver {
+    public class DeleteMatchObserver implements CompletableObserver {
         @Override
         public void onSubscribe(Disposable d) {
 

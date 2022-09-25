@@ -41,6 +41,19 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/delete_match_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/toolbarSidesMargin"
+            android:text="ELIMINA"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
@@ -77,7 +90,6 @@
         <TextView
             android:layout_width="@dimen/TextViewWidth"
             android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
             android:background="@drawable/text_lines"
             android:gravity="center"
             android:text="Risultato"
@@ -117,14 +129,29 @@
             android:textColor="@color/black" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/delete_match_btn"
-        android:layout_width="@dimen/TextViewWidth"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/note_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fieldHeight"
         android:layout_below="@id/date_ll"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30sp"
-        android:text="Elimina"
-        app:backgroundTint="@color/red" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="@dimen/TextViewWidth"
+            android:layout_height="match_parent"
+            android:background="@drawable/text_lines"
+            android:gravity="center"
+            android:text="Note"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/notes_tw"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/simple_line"
+            android:gravity="center"
+            android:hint="-"
+            android:textColor="@color/black" />
+    </LinearLayout>
 
 </RelativeLayout>

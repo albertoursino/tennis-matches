@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/green_1"
     android:fitsSystemWindows="true"
-    tools:context=".NewOpponentForm"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".NewOpponentForm">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
@@ -51,6 +51,7 @@
             android:text="SALVA"
             android:textColor="@color/white"
             android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -71,7 +72,8 @@
         android:paddingHorizontal="@dimen/paddingText"
         android:paddingVertical="@dimen/paddingText"
         android:singleLine="true"
-        android:text="" />
+        android:text=""
+        android:textSize="15sp" />
 
     <EditText
         android:id="@+id/last_name"
@@ -88,7 +90,8 @@
         android:paddingHorizontal="@dimen/paddingText"
         android:paddingVertical="@dimen/paddingText"
         android:singleLine="true"
-        android:text="" />
+        android:text=""
+        android:textSize="15sp" />
 
     <EditText
         android:id="@+id/notes"
@@ -101,6 +104,7 @@
         android:minHeight="70sp"
         android:paddingHorizontal="@dimen/paddingText"
         android:paddingVertical="@dimen/paddingText"
-        android:text="" />
+        android:text=""
+        android:textSize="15sp" />
 
 </LinearLayout>
