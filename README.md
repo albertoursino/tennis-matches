@@ -1,12 +1,13 @@
-Do you want to keep track of the tennis matches you play?
+🎾 TennisMatches – Track your tennis battles with ease
 --
 
-**TennisMatches** allows you to create an **opponent's profile** and keep track of the **matches played** with that opponent, specifying the result of the match and more.
+Want to keep a record of the tennis matches you play?
 
-The opponent profile you create will help you remember who you played against and if you want to play them again...
+TennisMatches lets you create detailed opponent profiles and log every match result, including scores and other key details. Never forget who you’ve played, how it went, or whether you’d like a rematch.
 
-The most interesting aspect of this app is the fact that you can have **statistics** at your fingertips.
+The best part? You’ll have instant access to statistics that give you insights into your performance over time.
 
 ---
 
-The app is currently in development, stay tuned and if you need anything please [contact me](https://github.com/albertoursino)!
+🚧 The app is still in development — stay tuned for updates!
+Got questions or feedback? [Contact me anytime](https://github.com/albertoursino).
